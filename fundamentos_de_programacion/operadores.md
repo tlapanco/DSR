@@ -48,8 +48,8 @@ Los operadores de concatenación se usan para unir cadenas de texto. Aquí tiene
 
 ## Enlaces de Interés 📚
 
-Aquí encontrarás una colección de enlaces útiles para profundizar en diversos temas relacionados con este proyecto:
+Aquí encontrarás una colección de enlaces útiles para profundizar con este tema:
 
 ### Herramientas
 
-- 📝 [Calculadora interactiva de operdores de PSeint](https://tlapanco.github.io/DSR/fundamentos_de_programacion/calculadora_de_operadores.html)
+- 📝 [Calculadora interactiva de operadores de PSeint](https://tlapanco.github.io/DSR/fundamentos_de_programacion/calculadora_de_operadores.html)
