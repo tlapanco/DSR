@@ -44,3 +44,12 @@ Los operadores de concatenación se usan para unir cadenas de texto. Aquí tiene
 | Operador | Descripción          | Ejemplo                        |
 |----------|----------------------|--------------------------------|
 | `&`      | Concatenación de texto| `"Hola" & " Mundo"`            |
+
+
+## Enlaces de Interés 📚
+
+Aquí encontrarás una colección de enlaces útiles para profundizar en diversos temas relacionados con este proyecto:
+
+### Herramientas
+
+- 📝 [Calculadora interactiva de operdores de PSeint](https://tlapanco.github.io/DSR/fundamentos_de_programacion/calculadora_de_operadores.html)
