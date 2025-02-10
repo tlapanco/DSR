@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operadores PSeint | Fundamentos de programación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen px-2 bg-sky-100">
+
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+        <h1 class="text-2xl font-bold text-center text-blue-900">Calculadora de Operadores de PSeint</h1>
+
+        <div class="mt-4">
+            <label class="block text-gray-700 font-medium">Selecciona el tipo de operador:</label>
+            <select id="operatorType" class="w-full p-2 border rounded mt-1" onchange="updateUI()">
+                <option value="math">Matemáticos</option>
+                <option value="logic">Lógicos</option>
+                <option value="comparison">Comparación</option>
+                <option value="concatenation">Concatenación</option>
+            </select>
+        </div>
+
+        <div class="mt-4">
+            <label class="block text-gray-700 font-medium">Selecciona el operador:</label>
+            <select id="operator" class="w-full p-2 border rounded mt-1"></select>
+        </div>
+
+        <div class="mt-4">
+            <label class="block text-gray-700 font-medium">Valor 1:</label>
+            <input type="text" id="value1" class="w-full p-2 border rounded mt-1">
+            <select id="value1Select" class="w-full p-2 border rounded mt-1 hidden">
+                <option value="true">Verdadero</option>
+                <option value="false">Falso</option>
+            </select>
+        </div>
+
+        <div class="mt-4">
+            <label class="block text-gray-700 font-medium">Valor 2:</label>
+            <input type="text" id="value2" class="w-full p-2 border rounded mt-1">
+            <select id="value2Select" class="w-full p-2 border rounded mt-1 hidden">
+                <option value="true">Verdadero</option>
+                <option value="false">Falso</option>
+            </select>
+        </div>
+
+        <button onclick="calculate()" class="w-full bg-orange-500 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-orange-600 transition">
+            Calcular
+        </button>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md">
+            <h2 class="text-xl font-bold text-blue-900">Resultado</h2>
+            <p id="modalResult" class="mt-2 text-gray-700"></p>
+            <button onclick="closeModal()" class="mt-4 w-full bg-orange-500 text-white font-bold py-2 px-4 rounded hover:bg-orange-600 transition">
+                Cerrar
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const operatorType = document.getElementById("operatorType");
+        const operator = document.getElementById("operator");
+        const value1 = document.getElementById("value1");
+        const value2 = document.getElementById("value2");
+        const value1Select = document.getElementById("value1Select");
+        const value2Select = document.getElementById("value2Select");
+        const modal = document.getElementById("modal");
+        const modalResult = document.getElementById("modalResult");
+
+        const operators = {
+            math: { "+": ["Suma", "+"], "-": ["Resta", "-"], "*": ["Multiplicación", "*"], "/": ["División", "/"] },
+            logic: { "&&": ["AND", "Y"], "||": ["OR", "O"], "!": ["NOT (solo usa el valor 1)", "No"] },
+            comparison: { "==": ["Igual a", "="], "!=": ["Diferente de", "<>"], ">": ["Mayor que", ">"], "<": ["Menor que", "<"], "<=": ["Menor o igual a", "≤"], ">=": ["Mayor o igual a", "≥"]},
+            concatenation: { "+": ["Concatenar cadenas de texto", "&"] }
+        };
+
+        function updateUI() {
+            const selectedType = operatorType.value;
+            operator.innerHTML = "";
+            for (const op in operators[selectedType]) {
+                const option = document.createElement("option");
+                option.value = op;
+                option.textContent = `( ${operators[selectedType][op][1]} )  ${operators[selectedType][op][0]}`;
+                operator.appendChild(option);
+            }
+
+            if (selectedType === "logic") {
+                value1.classList.add("hidden");
+                value2.classList.add("hidden");
+                value1Select.classList.remove("hidden");
+                value2Select.classList.remove("hidden");
+            } else {
+                value1.classList.remove("hidden");
+                value2.classList.remove("hidden");
+                value1Select.classList.add("hidden");
+                value2Select.classList.add("hidden");
+            }
+        }
+
+        function roundDecimals(value) {
+            return Math.round(value * 10000) / 10000; // Redondea a 4 decimales
+        }
+
+        function safeParseFloat(value) {
+            return value.trim() ? parseFloat(value) : NaN;
+        }
+
+        function calculate() {
+            const opType = operatorType.value;
+            const op = operator.value;
+            let val1, val2;
+            let result = "";
+            let description = "";
+
+            if (opType === "logic") {
+                val1 = value1Select.value === "true";
+                val2 = value2Select.value === "true";
+                if (op === "!") {
+                    result = !val1 ? "Verdadero" : "Falso";                    
+                    description = `Negación lógica de ${val1 ? "Verdadero" : "Falso"} es ${result}`;
+                } else {
+                    result = eval(`${val1} ${op} ${val2}`);
+                    description = `Evaluación lógica: ${val1 ? "Verdadero" : "Falso"} ${operators[opType][op][1]} ${val2 ? "Verdadero" : "Falso"} = ${result ? "Verdadero" : "Falso"}`;
+                }
+            } 
+            else if (opType === "math") {
+                val1 = safeParseFloat(value1.value);
+                val2 = safeParseFloat(value2.value);
+
+                if (isNaN(val1) || isNaN(val2)) {
+                    result = "Error: Ingresa números válidos.";
+                } else {
+                    result = eval(`${val1} ${op} ${val2}`);
+                    result = roundDecimals(result);
+                    description = `Operación matemática: ${val1} ${operators[opType][op][1]} ${val2} = ${result}`;
+                }
+            } 
+            else if (opType === "comparison") {
+                val1 = isNaN(value1.value) ? value1.value : safeParseFloat(value1.value);
+                val2 = isNaN(value2.value) ? value2.value : safeParseFloat(value2.value);
+                result = eval(`${JSON.stringify(val1)} ${op} ${JSON.stringify(val2)}`);
+                description = `Comparación: ${val1} ${operators[opType][op][1]} ${val2} es ${result ? "Verdadero" : "Falso"}`;
+            } 
+            else if (opType === "concatenation") {
+                val1 = value1.value;
+                val2 = value2.value;
+                result = val1 + val2;
+                description = `Concatenación de "${val1}" ${operators[opType][op][1]} "${val2}" da como resultado: "${result}"`;
+            }
+
+            modalResult.textContent = description || result;
+            modal.classList.remove("hidden");
+        }
+
+        function closeModal() {
+            modal.classList.add("hidden");
+        }
+
+        updateUI();
+    </script>
+
+</body>
+</html>
