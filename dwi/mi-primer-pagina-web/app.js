@@ -56,7 +56,10 @@ const alumnos = [
 		nombre: 'Marilyn',
 		carpeta: 'marilyn/trabajo1Mayn.html'
 	},
- { nombre: 'Joshua', carpeta: 'joshua/Rauw Alejandro.html'},
+	{ 
+		nombre: 'Joshua',
+		carpeta: 'joshua/Rauw Alejandro.html'
+	},
 ]
 
 
